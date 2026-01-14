@@ -1,0 +1,16 @@
+services:
+  app:
+    build: ./app
+    image: app
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:18-alpine
+    env_file:
+      - .env
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data

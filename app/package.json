@@ -1,0 +1,45 @@
+{
+  "name": "semantic-search-gallery-toy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/app.ts",
+    "prettier:write": "prettier --write src",
+    "lint": "eslint src --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chlibekp/semantic-search-gallery-toy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chlibekp/semantic-search-gallery-toy/issues"
+  },
+  "homepage": "https://github.com/chlibekp/semantic-search-gallery-toy#readme",
+  "description": "",
+  "dependencies": {
+    "@mikro-orm/core": "^6.6.4",
+    "@mikro-orm/migrations": "^6.6.4",
+    "@mikro-orm/postgresql": "^6.6.4",
+    "@types/morgan": "^1.9.10",
+    "@xenova/transformers": "^2.17.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "morgan": "^1.10.1",
+    "sharp": "^0.34.5",
+    "tsx": "^4.21.0",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/express": "^5.0.6",
+    "eslint": "^9.39.2",
+    "globals": "^17.0.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.7.4",
+    "typescript-eslint": "^8.53.0"
+  }
+}
