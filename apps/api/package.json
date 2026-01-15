@@ -4,9 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "tsx src/app.ts",
+    "start": "npm run migrate:up && tsx src/app.ts",
     "prettier:write": "prettier --write src",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "migrate:create": "POSTGRES_HOST=localhost mikro-orm-esm migration:create --config src/database/mikro-orm.config.ts",
+    "migrate:up": "mikro-orm-esm migration:up --config src/database/mikro-orm.config.ts"
   },
   "repository": {
     "type": "git",
@@ -21,25 +23,33 @@
   "homepage": "https://github.com/chlibekp/semantic-search-gallery-toy#readme",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.969.0",
+    "@mikro-orm/cli": "^6.6.4",
     "@mikro-orm/core": "^6.6.4",
     "@mikro-orm/migrations": "^6.6.4",
     "@mikro-orm/postgresql": "^6.6.4",
     "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
     "@xenova/transformers": "^2.17.2",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "ioredis": "^5.9.2",
     "morgan": "^1.10.1",
+    "multer": "^2.0.2",
     "sharp": "^0.34.5",
     "tsx": "^4.21.0",
+    "uuid": "^13.0.0",
     "winston": "^3.19.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@types/busboy": "^1.5.4",
     "@types/express": "^5.0.6",
     "eslint": "^9.39.2",
     "globals": "^17.0.0",
     "jiti": "^2.6.1",
     "prettier": "^3.7.4",
+    "ts-node": "^10.9.2",
     "typescript-eslint": "^8.53.0"
   }
 }

@@ -5,14 +5,10 @@ import morgan from "morgan";
 
 import v1Router from './routes/v1.route';
 import env from "./util/env";
-import orm from "./database/pg";
 
 logger.info("Starting app...");
 
 const app = express();
-
-const db = orm;
-console.log(db)
 
 // Configure morgan to use winston for logging
 const morganMiddleware = morgan(

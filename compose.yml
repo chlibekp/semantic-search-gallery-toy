@@ -1,7 +1,7 @@
 services:
-  app:
-    build: ./app
-    image: app
+  api:
+    build: ./apps/api
+    image: api
     ports:
       - 3000:3000
     env_file:
@@ -9,8 +9,21 @@ services:
     depends_on:
       - postgres
   postgres:
-    image: postgres:18-alpine
+    image: postgres:17
+    ports:
+      - 5432:5432
     env_file:
       - .env
     volumes:
-      - ./db-data/:/var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/
+  redis:
+    image: redis:7
+    ports:
+      - 6379:6379 
+    command: redis-server --save 20 1 --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+
+volumes:
+  pg-data:
+  redis-data:
