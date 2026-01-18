@@ -10,4 +10,7 @@ export class Images {
 
     @Property({ type: "string", nullable: true })
     aiDescription?: string;
+
+    @Property({ type: "float[]", nullable: true })
+    aiEmbedding?: number[];
 }

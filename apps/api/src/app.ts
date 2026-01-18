@@ -5,6 +5,7 @@ import morgan from "morgan";
 
 import v1Router from './routes/v1.route';
 import env from "./util/env";
+import { processedEmbeddings } from "./infra/consumers/processedEmbeddings";
 
 logger.info("Starting app...");
 
@@ -35,10 +36,13 @@ app.use('/api/v1', v1Router);
 const server = app.listen(env.PORT, (err) => {
     if(err) {
         logger.error("Failed to start app...", { error: err, port: env.PORT })
-        process.exit(-1);
+        process.exit(1);
     }
     logger.info(`App started on port ${env.PORT}`);
 })
+
+// Start loop that gets new jobs from the "process-images" queue
+processedEmbeddings();
 
 
 // Listen for SIGINT and SIGTERM signals to trigger a graceful shutdown
