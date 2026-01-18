@@ -5,7 +5,8 @@ import morgan from "morgan";
 
 import v1Router from './routes/v1.route';
 import env from "./util/env";
-import { processedEmbeddings } from "./infra/consumers/processedEmbeddings";
+import ConsumerManager from "./infra/consumers/consumerManager";
+import redis from "./infra/redis";
 
 logger.info("Starting app...");
 
@@ -41,12 +42,15 @@ const server = app.listen(env.PORT, (err) => {
     logger.info(`App started on port ${env.PORT}`);
 })
 
-// Start loop that gets new jobs from the "process-images" queue
-processedEmbeddings();
+const consumerManager = new ConsumerManager(redis, logger);
+consumerManager.start();
 
 
 // Listen for SIGINT and SIGTERM signals to trigger a graceful shutdown
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
-export default server;
+export default {
+    server,
+    consumerManager
+};

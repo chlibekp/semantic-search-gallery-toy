@@ -1,37 +1,38 @@
-
-import logger from "@/src/util/winston";
-import redis from "../redis";
+import orm from "@/src/database/pg";
 import { ProcessImagesJob } from "@/src/interfaces/jobs";
+import { tryCatch } from '@/src/util/trycatch';
+import { Images } from "@/src/database/entities/images";
+import logger from "@/src/util/winston";
 
-async function processedEmbeddings() {
-    while (true) {
-        let job: ProcessImagesJob | null = null;
-        try {
-            // Move the job to processing queue
-            const jobString = await redis.brpoplpush(
-                "process-images:queue",
-                "process-images:processing",
-                5
-            );
-            if (!jobString) continue;
+/**
+ * Updates the image with generated embeddings
+ */
+async function processedEmbeddings(job: ProcessImagesJob) {
+    logger.info("Starting to process image", { job: job.id });
 
-            job = JSON.parse(jobString) as ProcessImagesJob;
+    const em = orm.em.fork();
 
+    // get an existing image from db
+    const { data: image, error } = await tryCatch(em.findOne(Images, { id: job.id }) as Promise<Images | null>);
 
-            // If the job was successful, remove it from the processing queue
-            await redis.lrem("process-images:processing", 1, jobString)
-        } catch (err) {
-            logger.warn("Error processing job: ", err);
+    // Make sure we got the image
+    if(error) {
+        throw new Error(`Error finding image id: ${job.id} ${error.message}`);
+    }
 
-            if(job) {
-                const jobString = JSON.stringify(job);  
+    if(!image) {
+        throw new Error(`Image not found id: ${job.id}`);
+    }
 
-                // If the job fails to process, move the job back to queue and remove it from processing queue
-                await redis.lrem("process-images:processing", 1, jobString);
-                await redis.lpush("process-images:queue", jobString);
-                logger.warn("Failed job put back to queue: ", job);
-            }
-        }
+    // Update embeddings
+    image.aiEmbedding = job.aiEmbedding;
+
+    // Update the image
+    const { error: persistError } = await tryCatch(em.persist(image).flush());
+
+    // Make sure we updated the image
+    if(persistError) {
+        throw new Error(`Error updating image id: ${job.id} ${persistError.message}`);
     }
 }
 

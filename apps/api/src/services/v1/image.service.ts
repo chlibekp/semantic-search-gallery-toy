@@ -48,7 +48,7 @@ class ImageService {
 
         // Try to push all uploaded images to redis queue for asynchronous processing
         for(const file of filesToInsert) {
-            const { error } = await tryCatch(redis.rpush("process-images", JSON.stringify({
+            const { error } = await tryCatch(redis.rpush("process-images:queue", JSON.stringify({
                 id: file.id,
                 imageUrl: file.imageUrl
             })))

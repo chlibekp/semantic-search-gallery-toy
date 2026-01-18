@@ -7,7 +7,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgre
+      - postgres
+      - redis
 
   worker:
     build: ./apps/worker
@@ -15,7 +16,6 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
       - redis
   postgres:
     image: postgres:17
@@ -30,9 +30,9 @@ services:
     ports:
       - 6379:6379 
     command: redis-server --save 20 1 --requirepass ${REDIS_PASSWORD}
-    volumes:
-      - redis-data:/data
+    #volumes:
+    #  - redis-data:/data
 
 volumes:
   pg-data:
-  redis-data:
+  #redis-data:

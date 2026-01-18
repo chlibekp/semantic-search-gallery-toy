@@ -8,7 +8,10 @@ export default function shutdown() {
     logger.info("Shutting down app...");
 
     // close the http server
-    app.close();
+    app.server.close();
+
+    // Stop the consumer manager from processing more jobs
+    app.consumerManager.destroy();
 
     process.exit(0);
 }
