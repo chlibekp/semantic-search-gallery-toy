@@ -1,11 +1,28 @@
 import IORedis from "ioredis"
 import env from "../util/env"
 
-// Create a new IORedis singleton
-const redis = new IORedis({
+/**
+  We need to have 2 redis instances, because blocking commands occupy the connection 
+  and prevent other commands from being processed on the same redis instance
+
+  This keeps API latency stable
+ */
+
+// Create a new redis instance for consumer
+const redisConsumer = new IORedis({
   host: env.REDIS_HOST,
   port: 6379,
-  password: env.REDIS_PASSWORD
+  password: env.REDIS_PASSWORD,
 });
 
-export default redis;
+// Create a new redis instance for api
+const redisApi = new IORedis({
+  host: env.REDIS_HOST,
+  port: 6379,
+  password: env.REDIS_PASSWORD,
+});
+
+export {
+  redisConsumer,
+  redisApi,
+}

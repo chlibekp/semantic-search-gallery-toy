@@ -11,7 +11,7 @@ async function uploadController(req: Request, res: Response) {
 
     const uploadedFiles = await imageService.upload(Array.isArray(files) ? files : files ? Object.values(files).flat() : []);
 
-    return res.status(200).json(uploadedFiles);
+    return res.status(201).json(uploadedFiles);
 }
 
 export default uploadController;

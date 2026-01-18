@@ -1,6 +1,6 @@
 import IORedis from "ioredis";
 import { tryCatch } from "../util/trycatch";
-import processImage from "../workers/processImageWorker";
+import processImage from "./workers/processImageWorker";
 import winston from "winston";
 import { ProcessImagesJob } from "../interfaces/jobs";
 import TextModel from "../ai/textModel";

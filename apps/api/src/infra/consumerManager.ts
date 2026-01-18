@@ -1,7 +1,7 @@
 import { ProcessImagesJob } from "@/src/interfaces/jobs";
 import IORedis from "ioredis";
 import winston from 'winston';
-import { processedEmbeddings } from "./processedEmbeddings";
+import { processedEmbeddings } from "./consumers/processedEmbeddings";
 
 class ConsumerManager {
   private redis: IORedis;

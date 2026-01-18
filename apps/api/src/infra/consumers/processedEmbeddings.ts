@@ -30,6 +30,9 @@ async function processedEmbeddings(job: ProcessImagesJob) {
     // Update the image
     const { error: persistError } = await tryCatch(em.persist(image).flush());
 
+
+    logger.info("Finished processing image", { job: job.id });
+
     // Make sure we updated the image
     if(persistError) {
         throw new Error(`Error updating image id: ${job.id} ${persistError.message}`);

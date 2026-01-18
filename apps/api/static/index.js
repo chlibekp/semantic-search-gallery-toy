@@ -7,7 +7,7 @@ const BASE_URL = "/api/v1/";
  */
 async function sendRequest(path, params, retries = 5, sleep = 250) {
     const response = await fetch(`${BASE_URL}${path}`, params);
-    if (response.status === 200) {
+    if (response.status >= 200 && response.status < 300) {
         return response.json();
     } else if (response.status === 400) {
         // If the response status is 400, throw an error with the error message from the server
@@ -26,6 +26,37 @@ async function sendRequest(path, params, retries = 5, sleep = 250) {
         return sendRequest(path, params, retries - 1, sleep);
     } else {
         throw new Error(`Request failed with status ${response.status}`);
+    }
+}
+
+async function updateImages() {
+    // get the image grid div
+    const grid = document.getElementById("image-grid");
+
+    const fetchedImages = await sendRequest("images");
+
+    // Clear the grid
+    grid.innerHTML = "";
+
+    // Add images to the grid
+    for (const imageGroup of fetchedImages) {
+        const imageRow = document.createElement("div");
+        imageRow.classList.add("image-row");
+
+        for (const image of imageGroup) {
+            const imageElement = document.createElement("img");
+            imageElement.src = image.imageUrl;
+            imageElement.alt = `Image ${image.id}`;
+            
+            // Make the image smaller for thumbnail in 16:9 ratio
+            imageElement.width = 160;
+            imageElement.height = 90;
+
+            imageElement.classList.add("image");
+            imageRow.appendChild(imageElement);
+        }
+
+        grid.appendChild(imageRow);
     }
 }
 
@@ -63,12 +94,14 @@ async function main() {
 
         // Handle the response
         if (response) {
-            alert(`Images uploaded successfully. Server response: ${JSON.stringify(response)}`);
+            await updateImages();
             if(response.errors > 0) {
                 alert(`Failed to upload ${response.errors} images.`);
             }
         }
     }
+
+    await updateImages();
 }
 
 main();

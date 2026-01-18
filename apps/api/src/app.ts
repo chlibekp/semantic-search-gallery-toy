@@ -5,8 +5,8 @@ import morgan from "morgan";
 
 import v1Router from './routes/v1.route';
 import env from "./util/env";
-import ConsumerManager from "./infra/consumers/consumerManager";
-import redis from "./infra/redis";
+import ConsumerManager from "./infra/consumerManager";
+import { redisConsumer } from "./infra/redis";
 
 logger.info("Starting app...");
 
@@ -42,7 +42,7 @@ const server = app.listen(env.PORT, (err) => {
     logger.info(`App started on port ${env.PORT}`);
 })
 
-const consumerManager = new ConsumerManager(redis, logger);
+const consumerManager = new ConsumerManager(redisConsumer, logger);
 consumerManager.start();
 
 

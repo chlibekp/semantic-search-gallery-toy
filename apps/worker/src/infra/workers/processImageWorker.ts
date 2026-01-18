@@ -1,11 +1,11 @@
 import sharp from "sharp";
-import TextModel from "../ai/textModel";
-import VisionModel from "../ai/visionModel";
-import { ProcessImagesJob } from "../interfaces/jobs";
-import logger from "../util/winston";
+import TextModel from "../../ai/textModel";
+import VisionModel from "../../ai/visionModel";
+import { ProcessImagesJob } from "../../interfaces/jobs";
+import logger from "../../util/winston";
 import { RawImage } from "@xenova/transformers";
 import { tryCatch } from '@/src/util/trycatch';
-import redis from "../infra/redis";
+import redis from "../redis";
 
 interface ProcessImageWorkerModels {
     textModel: TextModel;
