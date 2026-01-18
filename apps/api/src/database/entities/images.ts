@@ -11,6 +11,7 @@ export class Images {
     @Property({ type: "string", nullable: true })
     aiDescription?: string;
 
-    @Property({ type: "float[]", nullable: true })
+    // pgvector embedding
+    @Property({ type: "vector", nullable: true })
     aiEmbedding?: number[];
 }

@@ -18,7 +18,7 @@ services:
     depends_on:
       - redis
   postgres:
-    image: postgres:17
+    image: pgvector/pgvector:pg17
     ports:
       - 5432:5432
     env_file:

@@ -5,6 +5,7 @@ import S3Storage from "@/src/util/s3";
 import { tryCatch } from "@/src/util/trycatch";
 import logger from "@/src/util/winston";
 import sharp from "sharp";
+import { textModel } from "@/src/app";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -12,6 +13,15 @@ import { v4 as uuidv4 } from "uuid";
 type files = Express.Multer.File[] | undefined;
 
 class ImageService {
+    private chunkArray<T>(arr: T[], chunkSize: number) {
+        const output = [];
+        // Process images in groups of chunkSize
+        for (let i = 0; i < arr.length; i += chunkSize) {
+            output.push(arr.slice(i, i + chunkSize));
+        }
+        return output;
+    }
+
     async upload(files: files) {
         const s3 = new S3Storage();
 
@@ -87,8 +97,6 @@ class ImageService {
         await em.insertMany(Images, filesToInsert);
         await em.flush();
 
-        // Invalidate cached images
-        await redisConsumer.del("images");
 
         return {
             errors: failedFiles?.length || 0,
@@ -99,18 +107,42 @@ class ImageService {
     /**
      * Get all images from the database
      */
-    async getAllImages(): Promise<Images[][]> {
+    async getImages(query?: string): Promise<Images[][]> {
         const em = orm.em.fork();
+        
+        if(query && textModel.isLoaded) {
+            const { data: queryVectors, error: vectorError } = await tryCatch(textModel.getVectors(query));
+
+            if(vectorError) {
+                throw vectorError;
+            }
+
+            const validQuery = `[${queryVectors.join(",")}]`;
+
+            const results = await em.getConnection().execute(`
+                    SELECT 
+                        id, 
+                        image_url,
+                        1 - (ai_embedding <=> ?::vector) AS similarity
+                    FROM images
+                    WHERE ai_embedding IS NOT NULL
+                    ORDER BY ai_embedding <=> ?::vector
+                    LIMIT 20;
+                `, [validQuery, validQuery]) as { id: string, image_url: string }[];
+
+            const translated = results.map(result => ({
+                id: result.id,
+                imageUrl: result.image_url
+            }));
+            
+            return this.chunkArray<Images>(translated, 5)
+        }
+        
         const images = await em.findAll(Images, {
             fields: ["id", "imageUrl"]
         });
 
-        const output = [];
-
-        // Process images in groups of 5
-        for (let i = 0; i < images.length; i += 5) {
-            output.push(images.slice(i, i + 5));
-        }
+        const output = this.chunkArray<Images>(images, 5);
 
         return output;
     }

@@ -7,6 +7,7 @@ import v1Router from './routes/v1.route';
 import env from "./util/env";
 import ConsumerManager from "./infra/consumerManager";
 import { redisConsumer } from "./infra/redis";
+import TextModel from "./ai/textModel";
 
 logger.info("Starting app...");
 
@@ -45,12 +46,16 @@ const server = app.listen(env.PORT, (err) => {
 const consumerManager = new ConsumerManager(redisConsumer, logger);
 consumerManager.start();
 
+const textModel = new TextModel();
+textModel.load();
+
 
 // Listen for SIGINT and SIGTERM signals to trigger a graceful shutdown
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
-export default {
+export {
     server,
-    consumerManager
+    consumerManager,
+    textModel
 };

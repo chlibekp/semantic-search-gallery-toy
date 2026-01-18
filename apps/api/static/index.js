@@ -32,8 +32,9 @@ async function sendRequest(path, params, retries = 5, sleep = 250) {
 async function updateImages() {
     // get the image grid div
     const grid = document.getElementById("image-grid");
+    const query = document.getElementById("search-input").value;
 
-    const fetchedImages = await sendRequest("images");
+    const fetchedImages = await sendRequest(`images?query=${encodeURIComponent(query)}`);
 
     // Clear the grid
     grid.innerHTML = "";
@@ -61,6 +62,9 @@ async function updateImages() {
 }
 
 async function main() {
+    // Listen for search button click and update images
+    document.getElementById("search-button").onclick = updateImages;
+
     // get the submit button element
     const submitButton = document.getElementById("submit-button");
 

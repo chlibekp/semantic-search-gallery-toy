@@ -38,12 +38,12 @@
         },
         "ai_embedding": {
           "name": "ai_embedding",
-          "type": "text[]",
+          "type": "vector",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "mappedType": "unknown"
         }
       },
       "name": "images",
