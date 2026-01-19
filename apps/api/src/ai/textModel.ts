@@ -38,11 +38,8 @@ class TextModel {
    */
   async getVectors(query: string): Promise<number[]> {
     // Make sure text model and tokenizer are loaded
-    if (!this.tokenizer) {
-      throw new Error("Tokenizer not loaded");
-    }
-    if (!this.textModel) {
-      throw new Error("Text model not loaded");
+    if (!this.tokenizer || !this.textModel) {
+      throw new Error("Model or processor not loaded");
     }
     // Tokenize the query
     const inputs = this.tokenizer([query], { padding: true, truncation: true });

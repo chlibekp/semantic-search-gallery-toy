@@ -9,9 +9,11 @@ import {
 class VisionModel {
   visionModel: PreTrainedModel | null;
   processor: Processor | null;
+  isLoaded: boolean;
   constructor() {
     this.visionModel = null;
     this.processor = null;
+    this.isLoaded = false;
   }
 
   /**
@@ -25,6 +27,7 @@ class VisionModel {
     this.processor = await AutoProcessor.from_pretrained(
       "Xenova/clip-vit-base-patch32",
     );
+    this.isLoaded = true;
   }
 
   /**
@@ -32,11 +35,8 @@ class VisionModel {
    */
   async getVectors(image: RawImage): Promise<number[]> {
     // Make sure vision model and tokenizer are loaded
-    if (!this.processor) {
-      throw new Error("Tokenizer not loaded");
-    }
-    if (!this.visionModel) {
-      throw new Error("Vision model not loaded");
+    if (!this.processor || !this.visionModel) {
+      throw new Error("Model or processor not loaded");
     }
 
     // Tokenize the image

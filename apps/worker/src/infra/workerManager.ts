@@ -13,13 +13,16 @@ class WorkerManager {
   private modelsLoaded: boolean;
 
   public running: boolean;
-  constructor(redis: IORedis, logger: winston.Logger) {
+  private popTimeout: number;
+
+  constructor(redis: IORedis, logger: winston.Logger, popTimeout = 5) {
     this.redis = redis;
     this.logger = logger;
+    this.popTimeout = popTimeout;
 
     this.visionModel = new VisionModel();
 
-    this.running = true;
+    this.running = false;
     this.modelsLoaded = false;
   }
 
@@ -34,6 +37,8 @@ class WorkerManager {
   }
 
   async start() {
+    if(this.running) throw new Error("WorkerManager is already running");
+    this.running = true;
     while (this.running) {
       if (!this.modelsLoaded) {
         this.logger.info("Loading models...");
@@ -52,7 +57,7 @@ class WorkerManager {
     const imageToProcessString = await this.redis.brpoplpush(
       "process-images:queue",
       "process-images:processing",
-      5,
+      this.popTimeout,
     );
 
     // If the image is null, don't process it

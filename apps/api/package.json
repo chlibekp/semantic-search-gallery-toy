@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run migrate:up && tsx src/app.ts",
     "migrate:create": "POSTGRES_HOST=localhost mikro-orm-esm migration:create --config src/database/mikro-orm.config.ts",
-    "migrate:up": "mikro-orm-esm migration:up --config src/database/mikro-orm.config.ts"
+    "migrate:up": "mikro-orm-esm migration:up --config src/database/mikro-orm.config.ts",
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "jiti": "^2.6.1",
     "prettier": "^3.7.4",
     "ts-node": "^10.9.2",
-    "typescript-eslint": "^8.53.0"
+    "typescript-eslint": "^8.53.0",
+    "vitest": "^4.0.17"
   }
 }
