@@ -3,14 +3,12 @@ import { tryCatch } from "../util/trycatch";
 import processImage from "./workers/processImageWorker";
 import winston from "winston";
 import { ProcessImagesJob } from "../interfaces/jobs";
-import TextModel from "../ai/textModel";
 import VisionModel from "../ai/visionModel";
 
 class WorkerManager {
   private redis: IORedis;
   private logger: winston.Logger;
 
-  private textModel: TextModel;
   private visionModel: VisionModel;
   private modelsLoaded: boolean;
 
@@ -19,7 +17,6 @@ class WorkerManager {
     this.redis = redis;
     this.logger = logger;
 
-    this.textModel = new TextModel();
     this.visionModel = new VisionModel();
 
     this.running = true;
@@ -31,7 +28,6 @@ class WorkerManager {
   }
 
   private async loadModels() {
-    await this.textModel.load();
     await this.visionModel.load();
     this.modelsLoaded = true;
     this.logger.info("Models loaded");
@@ -80,12 +76,10 @@ class WorkerManager {
 
     // Try to run the processImage function
     const result = await tryCatch(
-      processImage(imageToProcess, {
-        textModel: this.textModel,
-        visionModel: this.visionModel,
-      }),
+      processImage(imageToProcess, this.visionModel),
     );
 
+    // Handle failed job
     if (result.error) {
       this.logger.error("Error processing image: ", result.error);
 

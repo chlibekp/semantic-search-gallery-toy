@@ -1,5 +1,5 @@
-import IORedis from "ioredis"
-import env from "../util/env"
+import IORedis from "ioredis";
+import env from "../util/env";
 
 /**
   We need to have 2 redis instances, because blocking commands occupy the connection 
@@ -22,7 +22,4 @@ const redisApi = new IORedis({
   password: env.REDIS_PASSWORD,
 });
 
-export {
-  redisConsumer,
-  redisApi,
-}
+export { redisConsumer, redisApi };

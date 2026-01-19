@@ -1,9 +1,9 @@
 import shutdown from "./util/shutdown";
 import logger from "./util/winston";
-import express from 'express';
+import express from "express";
 import morgan from "morgan";
 
-import v1Router from './routes/v1.route';
+import v1Router from "./routes/v1.route";
 import env from "./util/env";
 import ConsumerManager from "./infra/consumerManager";
 import { redisConsumer } from "./infra/redis";
@@ -15,13 +15,13 @@ const app = express();
 
 // Configure morgan to use winston for logging
 const morganMiddleware = morgan(
-    ":method :url :status :res[content-length] - :response-time ms",
-    {
-        stream: {
-            write: (msg) => logger.info(msg.trim())
-        }
-    }
-)
+  ":method :url :status :res[content-length] - :response-time ms",
+  {
+    stream: {
+      write: (msg) => logger.info(msg.trim()),
+    },
+  },
+);
 
 // middleware for logging requests
 app.use(morganMiddleware);
@@ -33,29 +33,26 @@ app.use(express.json());
 app.use(express.static("static"));
 
 // API versioning, v1 -> /v1
-app.use('/api/v1', v1Router);
+app.use("/api/v1", v1Router);
 
 const server = app.listen(env.PORT, (err) => {
-    if(err) {
-        logger.error("Failed to start app...", { error: err, port: env.PORT })
-        process.exit(1);
-    }
-    logger.info(`App started on port ${env.PORT}`);
-})
+  if (err) {
+    logger.error("Failed to start app...", { error: err, port: env.PORT });
+    process.exit(1);
+  }
+  logger.info(`App started on port ${env.PORT}`);
+});
 
+// Start the ConsumerManager
 const consumerManager = new ConsumerManager(redisConsumer, logger);
 consumerManager.start();
 
+// Preload TextModel for search
 const textModel = new TextModel();
 textModel.load();
-
 
 // Listen for SIGINT and SIGTERM signals to trigger a graceful shutdown
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
-export {
-    server,
-    consumerManager,
-    textModel
-};
+export { server, consumerManager, textModel };

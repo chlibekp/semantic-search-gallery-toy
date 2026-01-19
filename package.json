@@ -1,0 +1,27 @@
+{
+  "name": "semantic-search-gallery-toy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "jiti": "^2.6.1",
+    "prettier": "^3.8.0",
+    "typescript-eslint": "^8.53.0"
+  },
+  "scripts": {
+    "prettier:write": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "lint": "eslint apps/*/src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chlibekp/semantic-search-gallery-toy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chlibekp/semantic-search-gallery-toy/issues"
+  },
+  "homepage": "https://github.com/chlibekp/semantic-search-gallery-toy#readme",
+  "description": ""
+}

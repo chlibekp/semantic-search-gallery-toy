@@ -1,6 +1,6 @@
 /**
  * Got this from https://gist.github.com/t3dotgg/a486c4ae66d32bf17c09c73609dacc5b
- * 
+ *
  * Way to handle errors in typescript a go way, for cleaner error handling..
  */
 

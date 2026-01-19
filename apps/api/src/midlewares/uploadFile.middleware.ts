@@ -4,18 +4,24 @@ import multer from "multer";
 const ALLOWED_MIMETYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 10 * 1024 * 1024, // Allow files up to 10MB
-    },
-    fileFilter: (req, file, cb) => {
-        if (ALLOWED_MIMETYPES.includes(file.mimetype)) {
-            cb(null, true);
-        } else {
-            req.res?.writeHead(400, { "Content-Type": "application/json" });
-            req.res?.end(JSON.stringify({ error: "Invalid file type. Only JPEG, PNG and WebP are allowed." }));
-        }
-    },
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // Allow files up to 10MB
+  },
+  fileFilter: (req, file, cb) => {
+    // Allow only some file types from ALLOWED_MIMETYPES
+    if (ALLOWED_MIMETYPES.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      // Return an error if the file type is not allowed
+      req.res?.writeHead(400, { "Content-Type": "application/json" });
+      req.res?.end(
+        JSON.stringify({
+          error: "Invalid file type. Only JPEG, PNG and WebP are allowed.",
+        }),
+      );
+    }
+  },
 });
 
 export default upload;

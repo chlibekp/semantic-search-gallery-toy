@@ -5,8 +5,6 @@
   "type": "module",
   "scripts": {
     "start": "npm run migrate:up && tsx src/app.ts",
-    "prettier:write": "prettier --write src",
-    "lint": "eslint src --ext .ts",
     "migrate:create": "POSTGRES_HOST=localhost mikro-orm-esm migration:create --config src/database/mikro-orm.config.ts",
     "migrate:up": "mikro-orm-esm migration:up --config src/database/mikro-orm.config.ts"
   },

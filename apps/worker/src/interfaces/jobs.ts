@@ -1,9 +1,9 @@
 interface ProcessImagesJob {
-    id: string;
-    imageUrl: string;
-    aiEmbedding?: number[];
-    aiDescription?: string;
-    retries?: number;
+  id: string;
+  imageUrl: string;
+  aiEmbedding?: number[];
+  aiDescription?: string;
+  retries?: number;
 }
 
 export type { ProcessImagesJob };
