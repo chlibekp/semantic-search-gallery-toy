@@ -16,6 +16,7 @@
     "emitDecoratorMetadata": true,
     "allowImportingTsExtensions": true,
     "esModuleInterop": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
