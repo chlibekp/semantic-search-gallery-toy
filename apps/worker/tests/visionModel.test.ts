@@ -2,6 +2,7 @@ import VisionModel from "../src/ai/visionModel";
 import { RawImage } from "@xenova/transformers";
 import { describe, expect, it } from "vitest";
 import fs from "fs";
+import path from "path";
 
 const visionModel = new VisionModel();
 
@@ -24,7 +25,7 @@ describe("VisionModel", () => {
     }, 60000)
 
     it("Should return vectors when the model is loaded", async () => {
-        const rawBuffer = fs.readFileSync("tests/cat.jpg");
+        const rawBuffer = fs.readFileSync(path.resolve(__dirname, "../../../static/cat.jpeg"));
         const rawImage = new RawImage(rawBuffer, 1, 1, 1);
         
         const vectors = await visionModel.getVectors(rawImage);
