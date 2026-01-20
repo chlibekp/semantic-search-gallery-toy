@@ -79,6 +79,9 @@ class WorkerManager {
       imageToProcess.retries = 0;
     }
 
+    // Increment the retries
+    imageToProcess.retries++;
+
     // Try to run the processImage function
     const result = await tryCatch(
       processImage(imageToProcess, this.visionModel),
@@ -87,9 +90,6 @@ class WorkerManager {
     // Handle failed job
     if (result.error) {
       this.logger.error("Error processing image: ", result.error);
-
-      // Increment the retries
-      imageToProcess.retries++;
 
       // Remove the image from the processing list
       await this.redis.lrem(
