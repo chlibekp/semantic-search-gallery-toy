@@ -8,6 +8,9 @@ import env from "./util/env";
 import ConsumerManager from "./infra/consumerManager";
 import { redisConsumer } from "./infra/redis";
 import TextModel from "./ai/textModel";
+import healthRouter from "./routes/health.route";
+
+
 
 logger.info("Starting app...");
 
@@ -34,6 +37,9 @@ app.use(express.static("static"));
 
 // API versioning, v1 -> /v1
 app.use("/api/v1", v1Router);
+app.use("/api", healthRouter);
+
+
 
 const server = app.listen(env.PORT, (err) => {
   if (err) {
