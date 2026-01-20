@@ -8,7 +8,7 @@ This is a proof of concept, that showcases the use of semantic search in an imag
 2. The image gets asynchronously processed by the worker, that feeds the machine learning model the image and returns vectors
 3. The vectors get stored in the database for searching
 4. When a user searches for an image, the query gets processed again by the model, and the vectors get compared with the stored ones in the database
-5. The images with the highest similarity to the query get returned to the user
+5. The images with the highest similarity to the query gets returned to the user
 
 ## How to run it
 
