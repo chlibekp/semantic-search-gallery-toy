@@ -7,28 +7,30 @@ import path from "path";
 const visionModel = new VisionModel();
 
 describe("VisionModel", () => {
-    it("Model and processor should be null when not loaded", () => {
-        expect(visionModel.visionModel).toBe(null);
-        expect(visionModel.processor).toBe(null);
-    })
+  it("Model and processor should be null when not loaded", () => {
+    expect(visionModel.visionModel).toBe(null);
+    expect(visionModel.processor).toBe(null);
+  });
 
-    it("Should return an error when model is not initialized", () => {
-        const rawImage = new RawImage(Buffer.from(""), 1, 1, 1);
-        visionModel.getVectors(rawImage).catch((error) => {
-            expect(error.message).toBe("Model or processor not loaded");
-        });
-    })
+  it("Should return an error when model is not initialized", () => {
+    const rawImage = new RawImage(Buffer.from(""), 1, 1, 1);
+    visionModel.getVectors(rawImage).catch((error) => {
+      expect(error.message).toBe("Model or processor not loaded");
+    });
+  });
 
-    it("Should load model and processor", async () => {
-        await visionModel.load();
-        expect(visionModel.isLoaded).toBe(true);
-    }, 60000)
+  it("Should load model and processor", async () => {
+    await visionModel.load();
+    expect(visionModel.isLoaded).toBe(true);
+  }, 60000);
 
-    it("Should return vectors when the model is loaded", async () => {
-        const rawBuffer = fs.readFileSync(path.resolve(__dirname, "../../../static/cat.jpeg"));
-        const rawImage = new RawImage(rawBuffer, 1, 1, 1);
-        
-        const vectors = await visionModel.getVectors(rawImage);
-        expect(vectors.length).toBe(512);
-    })
-})
+  it("Should return vectors when the model is loaded", async () => {
+    const rawBuffer = fs.readFileSync(
+      path.resolve(__dirname, "../../../static/cat.jpeg"),
+    );
+    const rawImage = new RawImage(rawBuffer, 1, 1, 1);
+
+    const vectors = await visionModel.getVectors(rawImage);
+    expect(vectors.length).toBe(512);
+  });
+});

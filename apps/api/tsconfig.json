@@ -32,7 +32,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "../worker/tests/visionModel.test.ts", "../../eslint.config.mts"  ],
+    "**/*.mts",
+    "../worker/tests/visionModel.test.ts",
+    "../../eslint.config.mts"
+  ],
   "exclude": ["node_modules"]
 }

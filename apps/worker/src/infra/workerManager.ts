@@ -37,7 +37,7 @@ class WorkerManager {
   }
 
   async start() {
-    if(this.running) throw new Error("WorkerManager is already running");
+    if (this.running) throw new Error("WorkerManager is already running");
     this.running = true;
     while (this.running) {
       if (!this.modelsLoaded) {

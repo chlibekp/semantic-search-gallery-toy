@@ -5,14 +5,14 @@ import path from "node:path";
 const API_URL = process.env.API_URL || "http://localhost:3000/api/v1";
 
 interface UploadResponse {
-    errors: number,
-    files: {
-        id: string,
-    }[]
+  errors: number;
+  files: {
+    id: string;
+  }[];
 }
 
 interface Image {
-    id: string
+  id: string;
 }
 
 describe("Full Flow Integration Test", () => {
