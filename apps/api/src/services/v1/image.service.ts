@@ -147,28 +147,22 @@ class ImageService {
       const validQuery = `[${queryVectors.join(",")}]`;
 
       // Do a semantic search based on the vector on database with top_k of 20
-      const results = (await em.getConnection().execute(
+      const results = await em.getConnection().execute(
         `
-                    SELECT 
-                        id, 
-                        image_url,
-                        1 - (ai_embedding <=> ?::vector) AS similarity
-                    FROM images
-                    WHERE ai_embedding IS NOT NULL
-                    ORDER BY ai_embedding <=> ?::vector
-                    LIMIT 20;
-                `,
+          SELECT 
+            id, 
+            image_url AS "imageUrl",
+            1 - (ai_embedding <=> ?::vector) AS similarity
+          FROM images
+          WHERE ai_embedding IS NOT NULL
+          ORDER BY ai_embedding <=> ?::vector
+          LIMIT 20;
+        `,
         [validQuery, validQuery],
-      )) as { id: string; image_url: string }[];
-
-      // map results to expected format
-      const translated = results.map((result) => ({
-        id: result.id,
-        imageUrl: result.image_url,
-      }));
+      ) as Images[];
 
       // Chunk the results to 5 items per row
-      return this.chunkArray<Images>(translated, 5);
+      return this.chunkArray<Images>(results, 5);
     }
 
     // If we haven't got a query
