@@ -1,6 +1,6 @@
 import multer from "multer";
 
-// only allow jpeg and png
+// only allow jpeg, png and webp
 const ALLOWED_MIMETYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const upload = multer({
